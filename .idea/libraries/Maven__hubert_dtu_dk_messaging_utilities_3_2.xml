@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: hubert.dtu.dk:messaging-utilities:3.2">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/hubert/dtu/dk/messaging-utilities/3.2/messaging-utilities-3.2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/hubert/dtu/dk/messaging-utilities/3.2/messaging-utilities-3.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/hubert/dtu/dk/messaging-utilities/3.2/messaging-utilities-3.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

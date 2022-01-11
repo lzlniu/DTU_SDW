@@ -9,30 +9,41 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import objects.Payment;
+import objects.DtuPayUser;
 
-@Path("/Reports")
+@Path("/reports")
 public class ReportResource {
-    ReportManager account = ReportManager.instance;
+    ReportManager report = ReportManager.instance;
 
     @POST
-    @Path("/customers")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getCustomerReport(Payment payment) {
-        String newCid = null;
+    public Response getCustomerReport(DtuPayUser customer) {
         try {
-            return Response.ok().entity(newCid).build();
+            report.getPayments(customer);
+            return Response.ok().build();
         } catch (Exception e) {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         }
     }
 
     @POST
-    @Path("/merchants")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getMerchantReport(Payment payment) {
-        String newMid = null;
+    public Response getMerchantReport(DtuPayUser merchant) {
         try {
-            return Response.ok().entity(newMid).build();
+            report.getPayments(merchant);
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getSuperReport() {
+        try {
+            report.getPayments();
+            return Response.ok().build();
         } catch (Exception e) {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         }
