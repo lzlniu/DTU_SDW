@@ -3,6 +3,7 @@ package dtuPay.server;
 import dtu.ws.fastmoney.BankService;
 import dtu.ws.fastmoney.BankServiceException_Exception;
 import dtu.ws.fastmoney.BankServiceService;
+import objects.DtuPayUser;
 
 import java.util.ArrayList;
 import java.util.List;

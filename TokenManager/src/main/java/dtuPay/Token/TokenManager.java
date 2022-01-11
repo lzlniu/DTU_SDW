@@ -1,5 +1,7 @@
 package dtuPay.Token;
 
+import objects.DtuPayUser;
+
 import java.util.*;
 
 public class TokenManager {
