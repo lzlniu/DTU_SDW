@@ -21,7 +21,10 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="AccountManager" options="--add-modules java.base" />
+      <module name="AccountManager" options="-parameters" />
+      <module name="PaymentManager" options="-parameters" />
+      <module name="ReportManager" options="-parameters" />
+      <module name="TokenManager" options="-parameters" />
     </option>
   </component>
 </project>
