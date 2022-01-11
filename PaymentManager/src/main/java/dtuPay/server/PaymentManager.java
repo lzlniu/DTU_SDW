@@ -2,6 +2,7 @@ package dtuPay.server;
 
 import dtu.ws.fastmoney.BankService;
 import dtu.ws.fastmoney.BankServiceService;
+import objects.Payment;
 
 public class PaymentManager {
     public static PaymentManager instance = new PaymentManager();

@@ -1,5 +1,7 @@
 package dtuPay.server;
 
+import objects.DtuPayUser;
+
 import java.util.List;
 
 import javax.ws.rs.Consumes;
