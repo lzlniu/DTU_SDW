@@ -1,4 +1,4 @@
-package dtuPay.server;
+package dtuPay.Token;
 
 import io.quarkus.test.junit.NativeImageTest;
 
