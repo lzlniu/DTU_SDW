@@ -1,4 +1,4 @@
-package dtuPay.server;
+package dtuPay.Token;
 
 import java.util.*;
 
