@@ -10,7 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/Account")
+@Path("/accounts")
 public class AccountResource {
     AccountManager account = AccountManager.instance;
 
@@ -20,6 +20,7 @@ public class AccountResource {
     public List<DtuPayUser> getCustomers(){
         return account.getCustomers();
     }
+
 
     @POST
     @Path("/customers")
