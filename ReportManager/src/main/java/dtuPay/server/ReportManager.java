@@ -13,15 +13,15 @@ public class ReportManager {
         payments = new ArrayList<>();
     }
 
-    public List<Payment> getPayments(DtuPayUser user) throws Exception {
+    public List<Payment> getPayments(DtuPayUser user) {
         return null;
     }
 
-    public List<Payment> getPayments() throws Exception {
+    public List<Payment> getPayments() {
         return null;
     }
 
-    public Payment logPayment(String token) throws Exception {
+    public Payment logPayment(String token) {
         //get a specific payment record from its corresponding token
         return null;
     }
