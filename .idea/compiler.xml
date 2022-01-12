@@ -9,7 +9,6 @@
         <module name="PaymentManager" />
         <module name="AccountManager" />
         <module name="TokenManager" />
-        <module name="messaging-utilities" />
         <module name="ReportManager" />
       </profile>
     </annotationProcessing>

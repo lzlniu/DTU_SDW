@@ -6,7 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/PaymentManager/PaymentManager.iml" filepath="$PROJECT_DIR$/PaymentManager/PaymentManager.iml" />
       <module fileurl="file://$PROJECT_DIR$/ReportManager/ReportManager.iml" filepath="$PROJECT_DIR$/ReportManager/ReportManager.iml" />
       <module fileurl="file://$PROJECT_DIR$/TokenManager/TokenManager.iml" filepath="$PROJECT_DIR$/TokenManager/TokenManager.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../student_registration_MQ/messaging-utilities-3.2/messaging-utilities.iml" filepath="$PROJECT_DIR$/../student_registration_MQ/messaging-utilities-3.2/messaging-utilities.iml" />
+      <module fileurl="file://$PROJECT_DIR$/messaging-utilities-3.2/messaging-utilities.iml" filepath="$PROJECT_DIR$/messaging-utilities-3.2/messaging-utilities.iml" />
     </modules>
   </component>
 </project>
