@@ -16,36 +16,54 @@ import objects.DtuPayUser;
 public class ReportResource {
     ReportManager report = ReportManager.instance;
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response getCustomerReport(DtuPayUser customer) {
-        try {
-            report.getPayments(customer);
-            return Response.ok().build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
-        }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Payment> getCustomerReport(DtuPayUser customer) throws Exception {
+        return report.getPayments(customer);
     }
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response getMerchantReport(DtuPayUser merchant) {
-        try {
-            report.getPayments(merchant);
-            return Response.ok().build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
-        }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Payment> getMerchantReport(DtuPayUser merchant) throws Exception {
+        return report.getPayments(merchant);
     }
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response getSuperReport() {
-        try {
-            report.getPayments();
-            return Response.ok().build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
-        }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Payment> getSuperReport() throws Exception {
+        return report.getPayments();
     }
+
+//    @POST
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public Response getCustomerReport(DtuPayUser customer) {
+//        try {
+//            report.getPayments(customer);
+//            return Response.ok().build();
+//        } catch (Exception e) {
+//            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+//        }
+//    }
+//
+//    @POST
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public Response getMerchantReport(DtuPayUser merchant) {
+//        try {
+//            report.getPayments(merchant);
+//            return Response.ok().build();
+//        } catch (Exception e) {
+//            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+//        }
+//    }
+//
+//    @POST
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public Response getSuperReport() {
+//        try {
+//            report.getPayments();
+//            return Response.ok().build();
+//        } catch (Exception e) {
+//            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+//        }
+//    }
 }
