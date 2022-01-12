@@ -1,9 +1,9 @@
 package dtuPay.server;
 
-import java.util.ArrayList;
-import java.util.List;
 import objects.Payment;
 import objects.DtuPayUser;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReportManager {
     public static ReportManager instance = new ReportManager();
