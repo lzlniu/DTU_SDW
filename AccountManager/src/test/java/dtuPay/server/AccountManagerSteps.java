@@ -23,7 +23,7 @@ public class AccountManagerSteps {
 
     DtuPayUser customer = new DtuPayUser();
     DtuPayUser merchant = new DtuPayUser();
-    AccountManager manager = AccountManager.instance;
+    AccountManager manager = new AccountManagerFactory().getManager();
     BankService bank = new BankServiceService().getBankServicePort();
     Exception e = new Exception();
     List<String> bankAccounts;

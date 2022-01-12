@@ -9,7 +9,7 @@ import java.util.List;
 
 @Path("/accounts")
 public class AccountResource {
-    AccountManager account = AccountManager.instance;
+    AccountManager account = new AccountManagerFactory().getManager();
 
     @GET
     @Path("/customers")

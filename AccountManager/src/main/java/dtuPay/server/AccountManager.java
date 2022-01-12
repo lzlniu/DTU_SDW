@@ -3,6 +3,8 @@ package dtuPay.server;
 import dtu.ws.fastmoney.BankService;
 import dtu.ws.fastmoney.BankServiceException_Exception;
 import dtu.ws.fastmoney.BankServiceService;
+import messaging.Event;
+import messaging.MessageQueue;
 import objects.DtuPayUser;
 
 import java.util.ArrayList;
@@ -10,16 +12,30 @@ import java.util.List;
 import java.util.UUID;
 
 public class AccountManager {
-    public static AccountManager instance = new AccountManager();
+    private MessageQueue queue;
+
     private List<DtuPayUser> customers;
     private List<DtuPayUser> merchants;
 
     private BankService bank;
 
-    public AccountManager() {
+    public AccountManager(MessageQueue queue) {
+        this.queue = queue;
         customers = new ArrayList<>();
         merchants = new ArrayList<>();
         bank = new BankServiceService().getBankServicePort();
+        setupHandlers();
+    }
+
+    public void setupHandlers() {
+        queue.addHandler("GetTokensRequested", this::handleTokensRequested);
+    }
+
+    private void handleTokensRequested(Event event) {
+        var customer = event.getArgument(0, DtuPayUser.class);
+        boolean isRegistered = customers.contains(customer);
+        Event response = new Event("CustomerRegisteredForTokens", new Object[]{isRegistered});
+        queue.publish(response);
     }
 
     public String registerCustomer(DtuPayUser customer) throws Exception {
