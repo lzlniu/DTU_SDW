@@ -9,7 +9,7 @@ public class TokenManagerFactory {
         if (tokenManager != null) {
             return tokenManager;
         }
-        var mq = new RabbitMqQueue("MessageQ");
+        var mq = new RabbitMqQueue("localhost");
         tokenManager = new TokenManager(mq);
         return tokenManager;
     }

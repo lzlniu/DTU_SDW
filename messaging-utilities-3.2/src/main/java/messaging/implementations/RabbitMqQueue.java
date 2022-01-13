@@ -46,6 +46,7 @@ public class RabbitMqQueue implements MessageQueue {
 		try {
 			ConnectionFactory factory = new ConnectionFactory();
 			factory.setHost(hostname);
+			factory.setPort(5672);
 			Connection connection = factory.newConnection();
 			channel = connection.createChannel();
 			channel.exchangeDeclare(EXCHANGE_NAME, QUEUE_TYPE);
