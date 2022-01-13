@@ -10,7 +10,7 @@ public class AccountManagerFactory {
             if (accountManager != null) {
                 return accountManager;
             }
-            var mq = new RabbitMqQueue("MessageQ");
+            var mq = new RabbitMqQueue("rabbitMq");
             accountManager = new AccountManager(mq);
             return accountManager;
         }

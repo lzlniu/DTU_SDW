@@ -1,6 +1,9 @@
 package messaging.implementations;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
@@ -46,6 +49,7 @@ public class RabbitMqQueue implements MessageQueue {
 		try {
 			ConnectionFactory factory = new ConnectionFactory();
 			factory.setHost(hostname);
+			//factory.setPort(8084);
 			Connection connection = factory.newConnection();
 			channel = connection.createChannel();
 			channel.exchangeDeclare(EXCHANGE_NAME, QUEUE_TYPE);
