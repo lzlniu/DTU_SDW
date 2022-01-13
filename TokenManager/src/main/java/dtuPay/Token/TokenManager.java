@@ -43,13 +43,19 @@ public class TokenManager {
         isRegistered = new CompletableFuture<>();
         Event event = new Event("GetTokensRequested", new Object[]{user});
         queue.publish(event);
-        boolean registered = isRegistered.join();
+        System.out.println("event published");
+        //boolean registered = isRegistered.join();
         if (! activeTokens.containsKey(user)) {
+            System.out.println("activeTokens don't contains this user");
             activeTokens.put(user, generateTokenList(n));
+            System.out.println("this user tokens generated and stored in activeTokens");
         }
         else if (activeTokens.get(user).size() <= 1 ) {
+            System.out.println("activeTokens contains this user, but user have less or equal to 1 active token");
             activeTokens.get(user).addAll(generateTokenList(n));
+            System.out.println("this user tokens generated and stored in activeTokens");
         } else {
+            System.out.println("activeTokens contains this user");
             throw new Exception("User already has more than 1 token");
         }
         return activeTokens.get(user);
@@ -60,8 +66,8 @@ public class TokenManager {
     }
 
     public List<String> getUserTokens(DtuPayUser customer){
-        return null;
-    }
+        return activeTokens.get(customer);
+    } // Zelin Li
 
     public DtuPayUser getCustomerFromToken(){
         return null;
