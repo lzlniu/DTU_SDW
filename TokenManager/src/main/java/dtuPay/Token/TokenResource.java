@@ -18,7 +18,8 @@ public class TokenResource {
             List<String> newTokens = manager.generateTokens(user, 5);
             return Response.ok().entity(newTokens).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+            System.out.println("anything");
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
 
