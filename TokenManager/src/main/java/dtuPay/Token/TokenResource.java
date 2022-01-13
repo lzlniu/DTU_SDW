@@ -12,10 +12,11 @@ public class TokenResource {
     TokenManager manager = new TokenManagerFactory().getManager();
 
     @POST
+    @Path("/{customer}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response generateTokens(DtuPayUser user) {
+    public Response generateTokens(@PathParam("customer") String n, DtuPayUser customer) {
         try {
-            List<String> newTokens = manager.generateTokens(user, 5);
+            List<String> newTokens = manager.generateTokens(customer, Integer.valueOf(n));
             return Response.ok().entity(newTokens).build();
         } catch (Exception e) {
             System.out.println("anything");
