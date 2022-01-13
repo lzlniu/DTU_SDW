@@ -7,6 +7,7 @@ import messaging.MessageQueue;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public class TokenManager {
     private MessageQueue queue;
@@ -43,7 +44,7 @@ public class TokenManager {
         isRegistered = new CompletableFuture<>();
         Event event = new Event("GetTokensRequested", new Object[]{user});
         queue.publish(event);
-        boolean registered = isRegistered.join();
+        boolean registered = isRegistered.get(10, TimeUnit.SECONDS);
         if (! activeTokens.containsKey(user)) {
             activeTokens.put(user, generateTokenList(n));
         }
