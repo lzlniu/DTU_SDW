@@ -12,9 +12,12 @@ public class TokenManager {
     private MessageQueue queue;
     private CompletableFuture<Boolean> isRegistered;
     private Map<DtuPayUser,List<String>>activeTokens;
-    private Map<DtuPayUser,List<String>>suedTokens;
+    private Map<DtuPayUser,List<String>> usedTokens;
 
     public TokenManager(MessageQueue queue){
+        System.out.println("Im in token constructor!");
+        activeTokens = new HashMap<>();
+        usedTokens = new HashMap<>();
         this.queue = queue;
         queue.addHandler("CustomerRegisteredForTokens", this::handleCustomerCanGetTokens);
     }
@@ -41,7 +44,7 @@ public class TokenManager {
         Event event = new Event("GetTokensRequested", new Object[]{user});
         queue.publish(event);
         boolean registered = isRegistered.join();
-
+        System.out.println("registered: " + registered);
         if (! registered) {
             throw new Exception("User needs to be registered with DTU pay");
         }
