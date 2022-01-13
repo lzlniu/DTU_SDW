@@ -14,8 +14,6 @@ public class TokenResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response generateTokens(DtuPayUser user) {
-        /** Filled with w/e things that should be done different
-         * */
         try {
             List<String> newTokens = manager.generateTokens(user, 5);
             return Response.ok().entity(newTokens).build();
