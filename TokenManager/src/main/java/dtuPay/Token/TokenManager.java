@@ -7,6 +7,7 @@ import messaging.MessageQueue;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public class TokenManager {
     private MessageQueue queue;
@@ -43,19 +44,13 @@ public class TokenManager {
         isRegistered = new CompletableFuture<>();
         Event event = new Event("GetTokensRequested", new Object[]{user});
         queue.publish(event);
-        System.out.println("event published");
-        //boolean registered = isRegistered.join();
+        //boolean registered = isRegistered.get(10, TimeUnit.SECONDS);
         if (! activeTokens.containsKey(user)) {
-            System.out.println("activeTokens don't contains this user");
             activeTokens.put(user, generateTokenList(n));
-            System.out.println("this user tokens generated and stored in activeTokens");
         }
         else if (activeTokens.get(user).size() <= 1 ) {
-            System.out.println("activeTokens contains this user, but user have less or equal to 1 active token");
             activeTokens.get(user).addAll(generateTokenList(n));
-            System.out.println("this user tokens generated and stored in activeTokens");
         } else {
-            System.out.println("activeTokens contains this user");
             throw new Exception("User already has more than 1 token");
         }
         return activeTokens.get(user);
