@@ -53,12 +53,16 @@ public class PaymentManager {
         boolean customerIsFound = customerFound.get(10, TimeUnit.SECONDS);
         boolean merchantIsFound = merchantFound.get(10,TimeUnit.SECONDS);
 
+        if (!customerIsFound) throw new Exception("Customer token not valid");
+        if (!merchantIsFound) throw new Exception("merchant id is unknown");
 
         bank.transferMoneyFromTo(
                 customer.getBankID(),
                 merchant.getBankID(),
                 p.getAmount(), merchant.getFirstName() + " " + merchant.getLastName() + " Received payment of" +
                         p.getAmount() + "kr.");
+
+        mq.publish(new Event("SuccessfulPayment", new Object[]{p, customer}));
 
         return true;
     }

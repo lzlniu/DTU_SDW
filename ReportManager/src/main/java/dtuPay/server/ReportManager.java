@@ -1,15 +1,17 @@
 package dtuPay.server;
 
+import messaging.implementations.RabbitMqQueue;
 import objects.Payment;
 import objects.DtuPayUser;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReportManager {
-    public static ReportManager instance = new ReportManager();
+    private RabbitMqQueue mq;
     private List<Payment> payments;
 
-    public ReportManager() {
+    public ReportManager(RabbitMqQueue mq) {
+        this.mq = mq;
         payments = new ArrayList<>();
     }
 

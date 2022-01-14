@@ -13,7 +13,7 @@ import javax.ws.rs.core.Response;
 
 @Path("/reports")
 public class ReportResource {
-    ReportManager report = ReportManager.instance;
+    ReportManager report = new ReportManagerFactory().getManager();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

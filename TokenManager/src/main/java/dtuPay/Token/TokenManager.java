@@ -3,6 +3,7 @@ package dtuPay.Token;
 import objects.DtuPayUser;
 import messaging.Event;
 import messaging.MessageQueue;
+import objects.Payment;
 
 
 import java.util.*;
@@ -19,8 +20,19 @@ public class TokenManager {
         activeTokens = new HashMap<>();
         usedTokens = new HashMap<>();
         this.mq = queue;
-        queue.addHandler("CustomerRegisteredForTokens", this::handleCustomerCanGetTokens);
-        queue.addHandler("GetCustomerFromToken", this::getCustomerFromToken);
+        mq.addHandler("CustomerRegisteredForTokens", this::handleCustomerCanGetTokens);
+        mq.addHandler("GetCustomerFromToken", this::getCustomerFromToken);
+        mq.addHandler("SuccessfulPayment", this::depleteToken);
+    }
+
+    private void depleteToken(Event e) {
+        var payment = e.getArgument(0, Payment.class);
+        var customer = e.getArgument(1, DtuPayUser.class);
+
+        activeTokens.get(customer).remove(payment.getCustomerToken());
+
+        if (!usedTokens.keySet().contains(customer)) usedTokens.put(customer, new ArrayList<>());
+        usedTokens.get(customer).add(payment.getCustomerToken());
     }
 
     public List<String> generateTokenList(int n) throws Exception {
@@ -75,9 +87,8 @@ public class TokenManager {
             var tokens = activeTokens.get(user);
             if(tokens.contains(customerToken)) {
                 mq.publish(new Event("CustomerFromToken", new Object[]{true, user}));
-            }else{
-                mq.publish(new Event("CustomerFromToken", new Object[]{false, null}));
             }
         }
+        mq.publish(new Event("CustomerFromToken", new Object[]{false, null}));
     }
 }

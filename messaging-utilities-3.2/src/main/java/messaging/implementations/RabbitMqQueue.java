@@ -22,6 +22,7 @@ public class RabbitMqQueue implements MessageQueue {
 	private static final String DEFAULT_HOSTNAME = "localhost";
 	private static final String EXCHANGE_NAME = "eventsExchange";
 	private static final String QUEUE_TYPE = "topic";
+	private int x = 1;
 
 	private Channel channel;
 
