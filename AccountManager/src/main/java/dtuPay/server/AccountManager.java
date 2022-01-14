@@ -37,9 +37,9 @@ public class AccountManager {
         var merchantID = e.getArgument(0, String.class);
         try{
             DtuPayUser merchant = getUserById(merchants, merchantID);
-            new Event("MerchantFromIDFound", new Object[]{true, merchant});
+            queue.publish(new Event("MerchantFromIDFound", new Object[]{true, merchant}));
         }catch (Exception exception){
-            new Event("MerchantFromIDFound", new Object[]{false,null});
+            queue.publish(new Event("MerchantFromIDFound", new Object[]{false,null}));
         }
     }
 

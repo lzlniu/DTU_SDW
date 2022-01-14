@@ -8,6 +8,7 @@ import objects.DtuPayUser;
 import objects.Payment;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public class PaymentManager {
     private BankService bank;
@@ -38,12 +39,10 @@ public class PaymentManager {
         var isCustomerFound = e.getArgument(0, boolean.class);
         var dtuPayUser = e.getArgument(1, DtuPayUser.class);
 
-
         if(isCustomerFound){
             customer = dtuPayUser;
         }
         customerFound.complete(isCustomerFound);
-
     }
 
     public boolean createPayment(Payment p) throws Exception {
@@ -51,14 +50,14 @@ public class PaymentManager {
         mq.publish(new Event("GetCustomerFromToken", new Object[] {p.getCustomerToken()}));
         merchantFound = new CompletableFuture<>();
         mq.publish(new Event("GetMerchantFromID", new Object[]{p.getMerchantID()}));
-        boolean customerIsFound = customerFound.join();
-        boolean merchantIsFound = merchantFound.join();
+        boolean customerIsFound = customerFound.get(10, TimeUnit.SECONDS);
+        boolean merchantIsFound = merchantFound.get(10,TimeUnit.SECONDS);
 
 
         bank.transferMoneyFromTo(
                 customer.getBankID(),
                 merchant.getBankID(),
-                p.getAmount(), merchant.getFirstName() + " " + merchant.getLastName() + " Recieved payment of" +
+                p.getAmount(), merchant.getFirstName() + " " + merchant.getLastName() + " Received payment of" +
                         p.getAmount() + "kr.");
 
         return true;

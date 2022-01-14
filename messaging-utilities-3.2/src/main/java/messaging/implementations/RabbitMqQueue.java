@@ -69,12 +69,11 @@ public class RabbitMqQueue implements MessageQueue {
 			DeliverCallback deliverCallback = (consumerTag, delivery) -> {
 				String message = new String(delivery.getBody(), "UTF-8");
 
-				System.out.println("[x] handle event "+message);
-
 				Event event = new Gson().fromJson(message, Event.class);
 				
 				if (eventType.equals(event.getType())) {
 					handler.accept(event);
+					System.out.println("[x] handle event "+message);
 				}
 			};
 			channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {

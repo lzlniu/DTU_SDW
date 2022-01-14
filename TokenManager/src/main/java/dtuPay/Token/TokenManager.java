@@ -16,7 +16,6 @@ public class TokenManager {
     private Map<DtuPayUser,List<String>>usedTokens;
 
     public TokenManager(MessageQueue queue){
-        System.out.println("Im in token constructor!");
         activeTokens = new HashMap<>();
         usedTokens = new HashMap<>();
         this.mq = queue;
