@@ -9,17 +9,17 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public class TokenManager {
-    private MessageQueue queue;
+    private MessageQueue mq;
     private CompletableFuture<Boolean> isRegistered;
     private Map<DtuPayUser,List<String>>activeTokens;
     private Map<DtuPayUser,List<String>>usedTokens;
 
     public TokenManager(MessageQueue queue){
-        System.out.println("Im in token constructor!");
         activeTokens = new HashMap<>();
         usedTokens = new HashMap<>();
-        this.queue = queue;
+        this.mq = queue;
         queue.addHandler("CustomerRegisteredForTokens", this::handleCustomerCanGetTokens);
+        queue.addHandler("GetCustomerFromToken", this::getCustomerFromToken);
     }
 
     public List<String> generateTokenList(int n) throws Exception {
@@ -42,7 +42,7 @@ public class TokenManager {
     public List<String> generateTokens(DtuPayUser user, int n) throws Exception {
         isRegistered = new CompletableFuture<>();
         Event event = new Event("GetTokensRequested", new Object[]{user});
-        queue.publish(event);
+        mq.publish(event);
         boolean registered = isRegistered.join();
         if (! activeTokens.containsKey(user)) {
             activeTokens.put(user, generateTokenList(n));
@@ -63,7 +63,17 @@ public class TokenManager {
         return null;
     }
 
-    public DtuPayUser getCustomerFromToken(){
-        return null;
+    public void getCustomerFromToken(Event e) {
+
+        var customerToken = e.getArgument(0, String.class);
+
+        for(DtuPayUser user : activeTokens.keySet()){
+            var tokens = activeTokens.get(user);
+            if(tokens.contains(customerToken)) {
+                mq.publish(new Event("CustomerFromToken", new Object[]{true, user}));
+            }else{
+                mq.publish(new Event("CustomerFromToken", new Object[]{false, null}));
+            }
+        }
     }
 }
