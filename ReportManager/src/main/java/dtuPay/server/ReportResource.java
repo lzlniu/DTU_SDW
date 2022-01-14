@@ -2,12 +2,8 @@ package dtuPay.server;
 
 import objects.Payment;
 import objects.DtuPayUser;
-import java.util.List;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import java.util.Set;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -16,20 +12,22 @@ public class ReportResource {
     ReportManager report = new ReportManagerFactory().getManager();
 
     @GET
+    @Path("/customers/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Payment> getCustomerReport(DtuPayUser customer) throws Exception {
-        return report.getPayments(customer);
+    public Set<Payment> getCustomerReport(@PathParam("id") String customer) throws Exception {
+        return report.getCustomerPayments(customer);
+    }
+
+    @GET
+    @Path("/merchants/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Set<Payment> getMerchantReport(@PathParam("id") String merchant) throws Exception {
+        return report.getMerchantPayments(merchant);
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Payment> getMerchantReport(DtuPayUser merchant) throws Exception {
-        return report.getPayments(merchant);
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<Payment> getSuperReport() throws Exception {
+    public Set<Payment> getSuperReport() throws Exception {
         return report.getPayments();
     }
 

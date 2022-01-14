@@ -1,30 +1,46 @@
 package dtuPay.server;
 
+import messaging.Event;
+import messaging.MessageQueue;
 import messaging.implementations.RabbitMqQueue;
 import objects.Payment;
 import objects.DtuPayUser;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.*;
 
 public class ReportManager {
-    private RabbitMqQueue mq;
-    private List<Payment> payments;
+    private MessageQueue mq;
+    private HashMap<Payment, String> payments; //maps payments to customer ID's of the customer on that payment
 
-    public ReportManager(RabbitMqQueue mq) {
+    public ReportManager(MessageQueue mq) {
         this.mq = mq;
-        payments = new ArrayList<>();
+        payments = new HashMap<>();
+        mq.addHandler("SuccessfulPayment",this::logPayment);
     }
 
-    public List<Payment> getPayments(DtuPayUser user) {
-        return null;
+    public Set<Payment> getCustomerPayments(String userID) {
+        Set<Payment> report = new HashSet<>();
+        for (Payment p : payments.keySet()){
+            if (payments.get(p).equals(userID)) report.add(p);
+        }
+        return report;
     }
 
-    public List<Payment> getPayments() {
-        return null;
+    public Set<Payment> getMerchantPayments(String userID) {
+        Set<Payment> report = new HashSet<>();
+        for (Payment p : payments.keySet()){
+            if (p.getMerchantID().equals(userID)) report.add(p);
+        }
+        return report;
     }
 
-    public Payment logPayment(String token) {
-        //get a specific payment record from its corresponding token
-        return null;
+    public Set<Payment> getPayments() {
+        return payments.keySet();
+    }
+
+    public void logPayment(Event e) {
+        var payment = e.getArgument(0,Payment.class);
+        String customerID = e.getArgument(1,DtuPayUser.class).getDtuPayID();
+        payments.put(payment, customerID);
     }
 }
