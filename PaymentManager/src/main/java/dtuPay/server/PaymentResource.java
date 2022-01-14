@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response;
 
 @Path("/payments")
 public class PaymentResource {
-    PaymentManager pay = PaymentManager.instance;
+    PaymentManager pay = new PaymentManagerFactory().getManager();
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
