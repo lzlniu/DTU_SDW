@@ -7,6 +7,7 @@ import messaging.MessageQueue;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public class TokenManager {
     private MessageQueue mq;
@@ -60,8 +61,8 @@ public class TokenManager {
     }
 
     public List<String> getUserTokens(DtuPayUser customer){
-        return null;
-    }
+        return activeTokens.get(customer);
+    } // Zelin Li
 
     public void getCustomerFromToken(Event e) {
 

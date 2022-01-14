@@ -28,7 +28,19 @@ public class AccountManager {
     }
 
     public void setupHandlers() {
+
         queue.addHandler("GetTokensRequested", this::handleTokensRequested);
+        queue.addHandler("GetMerchantFromID", this::handleGetMerchantFromID);
+    }
+
+    private void handleGetMerchantFromID(Event e) {
+        var merchantID = e.getArgument(0, String.class);
+        try{
+            DtuPayUser merchant = getUserById(merchants, merchantID);
+            new Event("MerchantFromIDFound", new Object[]{true, merchant});
+        }catch (Exception exception){
+            new Event("MerchantFromIDFound", new Object[]{false,null});
+        }
     }
 
     private void handleTokensRequested(Event event) {
