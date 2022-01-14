@@ -16,6 +16,7 @@ public class TokenManager {
     private Map<DtuPayUser,List<String>>usedTokens;
 
     public TokenManager(MessageQueue queue){
+        System.out.println("Im in token constructor!");
         activeTokens = new HashMap<>();
         usedTokens = new HashMap<>();
         this.mq = queue;
@@ -44,7 +45,10 @@ public class TokenManager {
         isRegistered = new CompletableFuture<>();
         Event event = new Event("GetTokensRequested", new Object[]{user});
         mq.publish(event);
-        boolean registered = isRegistered.join();
+        boolean registered = isRegistered.get(10, TimeUnit.SECONDS);
+
+        if (!registered) {throw new Exception("customer is not registered");}
+
         if (! activeTokens.containsKey(user)) {
             activeTokens.put(user, generateTokenList(n));
         }
