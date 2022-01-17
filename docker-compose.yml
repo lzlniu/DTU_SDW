@@ -1,6 +1,11 @@
 version: '3'
 services:
   rabbitMq:
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:15672/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     image: rabbitmq:3-management
     container_name: rabbitMq_container
     ports:
@@ -8,28 +13,32 @@ services:
       - "15672:15672"
   accountmanager_service:
     depends_on:
-      - rabbitMq
+      rabbitMq:
+        condition: service_healthy
     container_name: accountmanager
     image: accountmanager
     ports:
       - "8080:8080"
   paymentmanager_service:
     depends_on:
-      - rabbitMq
+      rabbitMq:
+        condition: service_healthy
     container_name: paymentmanager
     image: paymentmanager
     ports:
       - "8081:8081"
   reportmanager_service:
     depends_on:
-      - rabbitMq
+      rabbitMq:
+        condition: service_healthy
     container_name: reportmanager
     image: reportmanager
     ports:
       - "8082:8082"
   tokenmanager_service:
     depends_on:
-      - rabbitMq
+      rabbitMq:
+        condition: service_healthy
     container_name: tokenmanager
     image: tokenmanager
     ports:
