@@ -2,6 +2,7 @@ version: '3'
 services:
   paymentmanager_service:
     build: .
+    container_name: paymentmanager
     image: paymentmanager
     ports:
       - "8081:8081"
