@@ -1,6 +1,13 @@
 #!/bin/bash
 set -e
-for i in $(ls ./*/build_*.sh | sort -r); do bash ${i}; done #build all the stuffs
+cd messaging-utilities-3.2
+bash build_msg.sh
+cd ..
+for i in $(ls -d *Manager); do
+  cd ${i}
+  bash build_*.sh
+  cd ..
+done #build all the stuffs
 docker-compose up -d rabbitMq
 #sleep 5
 docker-compose up -d accountmanager_service \
