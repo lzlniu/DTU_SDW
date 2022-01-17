@@ -1,0 +1,7 @@
+version: '3'
+services:
+  paymentmanager_service:
+    build: .
+    image: paymentmanager
+    ports:
+      - "8081:8081"

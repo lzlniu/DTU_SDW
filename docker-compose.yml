@@ -1,0 +1,25 @@
+version: '3'
+services:
+  rabbitMq:
+    image: rabbitmq:3-management
+    container_name: rabbitMq_container
+  accountmanager_service:
+    depends_on:
+      - rabbitMq
+    container_name: accountmanager
+    image: accountmanager
+  paymentmanager_service:
+    depends_on:
+      - rabbitMq
+    container_name: paymentmanager
+    image: paymentmanager
+  reportmanager_service:
+    depends_on:
+      - rabbitMq
+    container_name: reportmanager
+    image: reportmanager
+  tokenmanager_service:
+    depends_on:
+      - rabbitMq
+    container_name: tokenmanager
+    image: tokenmanager

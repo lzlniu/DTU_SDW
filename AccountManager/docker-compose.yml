@@ -1,0 +1,7 @@
+version: '3'
+services:
+  accountmanager_service:
+    build: .
+    image: accountmanager
+    ports:
+      - "8080:8080"

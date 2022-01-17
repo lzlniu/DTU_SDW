@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
-#docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.9-management
-for i in $(ls ./*/build_*.sh | sort -r); do
-	bash ${i}
-done
+for i in $(ls ./*/build_*.sh | sort -r); do bash ${i}; done #build all the stuffs
+docker-compose up -d rabbitMq
+#sleep 5
+docker-compose up -d accountmanager_service \
+paymentmanager_service \
+reportmanager_service \
+tokenmanager_service
+docker image prune -f

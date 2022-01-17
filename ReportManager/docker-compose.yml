@@ -1,0 +1,7 @@
+version: '3'
+services:
+  reportmanager_service:
+    build: .
+    image: reportmanager
+    ports:
+      - "8082:8082"

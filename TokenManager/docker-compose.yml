@@ -1,0 +1,7 @@
+version: '3'
+services:
+  tokenmanager_service:
+    build: .
+    image: tokenmanager
+    ports:
+      - "8083:8083"
