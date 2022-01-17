@@ -10,7 +10,7 @@ public class PaymentManagerFactory {
         if (paymentManager != null) {
             return paymentManager;
         }
-        var mq = new RabbitMqQueue("localhost");
+        var mq = new RabbitMqQueue("rabbitMq");
         paymentManager = new PaymentManager(mq);
         return paymentManager;
     }
