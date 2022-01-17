@@ -8,5 +8,7 @@ for i in $(ls -d *Manager); do
   bash build_*.sh
   cd ..
 done #build all the stuffs
-docker-compose up -d rabbitMq accountmanager_service paymentmanager_service reportmanager_service tokenmanager_service
+docker-compose up -d rabbitMq
+sleep 10
+docker-compose up -d accountmanager_service paymentmanager_service reportmanager_service tokenmanager_service
 docker image prune -f
