@@ -3,23 +3,34 @@ services:
   rabbitMq:
     image: rabbitmq:3-management
     container_name: rabbitMq_container
+    ports:
+      - "5672:5672"
+      - "15672:15672"
   accountmanager_service:
     depends_on:
       - rabbitMq
     container_name: accountmanager
     image: accountmanager
+    ports:
+      - "8080:8080"
   paymentmanager_service:
     depends_on:
       - rabbitMq
     container_name: paymentmanager
     image: paymentmanager
+    ports:
+      - "8081:8081"
   reportmanager_service:
     depends_on:
       - rabbitMq
     container_name: reportmanager
     image: reportmanager
+    ports:
+      - "8082:8082"
   tokenmanager_service:
     depends_on:
       - rabbitMq
     container_name: tokenmanager
     image: tokenmanager
+    ports:
+      - "8083:8083"
