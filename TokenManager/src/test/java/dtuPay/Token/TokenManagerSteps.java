@@ -78,12 +78,13 @@ public class TokenManagerSteps {
                 this.e = e;
             }
         }).start();
+        TimeUnit.SECONDS.sleep(1);
         manager.handleCustomerCanGetTokens(new Event("", new Object[]{true}));
         responseRecieved.get(10, TimeUnit.SECONDS);
     }
     //@author s202772 - Gustav Kinch
     @When("the customer request to generate {int} new tokens")
-    public void theCustomerRequestToGenerateNewTokensList(int amount){
+    public void theCustomerRequestToGenerateNewTokensList(int amount) throws InterruptedException {
         responseRecieved = new CompletableFuture<>();
         new Thread(() -> {
             try {
@@ -94,6 +95,7 @@ public class TokenManagerSteps {
                 this.e = e;
             }
         }).start();
+        TimeUnit.SECONDS.sleep(1);
     }
     //@author s215949 - Zelin Li
     @Then("the customer have {int} tokens in the list")

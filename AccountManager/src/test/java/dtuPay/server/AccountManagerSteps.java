@@ -9,6 +9,7 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import messaging.MessageQueue;
 import objects.DtuPayUser;
 
 import java.math.BigDecimal;
@@ -17,13 +18,15 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
+
+import static org.mockito.Mockito.mock;
 
 public class AccountManagerSteps {
 
     DtuPayUser customer = new DtuPayUser();
     DtuPayUser merchant = new DtuPayUser();
-    AccountManager manager = new AccountManagerFactory().getManager();
+    MessageQueue queue = mock(MessageQueue.class);
+    AccountManager manager = new AccountManager(queue);
     BankService bank = new BankServiceService().getBankServicePort();
     Exception e = new Exception();
     List<String> bankAccounts;
