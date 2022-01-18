@@ -1,6 +1,7 @@
 package dtuPay.server;
 
 import objects.DtuPayUser;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
