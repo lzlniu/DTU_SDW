@@ -11,6 +11,7 @@ import java.util.List;
 public class AccountResource {
     AccountManager account = new AccountManagerFactory().getManager();
 
+    //@author s212643 - Xingguang Geng
     @GET
     @Path("/customers")
     @Produces(MediaType.APPLICATION_JSON)
@@ -18,7 +19,7 @@ public class AccountResource {
         return account.getCustomers();
     }
 
-
+    //@author s164422 - Thomas Bergen
     @POST
     @Path("/customers")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -31,7 +32,7 @@ public class AccountResource {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         }
     }
-
+    //@author s174293 - Kasper Jørgensen
     @POST
     @Path("/merchants")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -45,6 +46,7 @@ public class AccountResource {
         }
     }
 
+    //@author s202772 - Gustav Kinch
     @GET
     @Path("/merchants")
     @Produces(MediaType.APPLICATION_JSON)

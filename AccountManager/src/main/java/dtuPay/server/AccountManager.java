@@ -19,6 +19,7 @@ public class AccountManager {
 
     private BankService bank;
 
+    //@author s164422 - Thomas Bergen
     public AccountManager(MessageQueue queue) {
         this.queue = queue;
         customers = new ArrayList<>();
@@ -26,13 +27,13 @@ public class AccountManager {
         bank = new BankServiceService().getBankServicePort();
         setupHandlers();
     }
-
+    //@author  s174293 - Kasper Jørgensen
     public void setupHandlers() {
 
         queue.addHandler("GetTokensRequested", this::handleTokensRequested);
         queue.addHandler("GetMerchantFromID", this::handleGetMerchantFromID);
     }
-
+    //@author s202772 - Gustav Kinch
     private void handleGetMerchantFromID(Event e) {
         var merchantID = e.getArgument(0, String.class);
         try{
@@ -42,22 +43,22 @@ public class AccountManager {
             queue.publish(new Event("MerchantFromIDFound", new Object[]{false,null}));
         }
     }
-
+    //@author s215949 - Zelin Li
     private void handleTokensRequested(Event event) {
         var customer = event.getArgument(0, DtuPayUser.class);
         boolean isRegistered = customers.contains(customer);
         Event response = new Event("CustomerRegisteredForTokens", new Object[]{isRegistered});
         queue.publish(response);
     }
-
+    //@author s213578 - Johannes Pedersen
     public String registerCustomer(DtuPayUser customer) throws Exception {
         return createDTUPayUser(customers,customer);
     }
-
+    //@author s212643 - Xingguang Geng
     public String registerMerchant(DtuPayUser merchant) throws Exception {
         return createDTUPayUser(merchants,merchant);
     }
-
+    //@author s164422 - Thomas Bergen
     public String createDTUPayUser(List<DtuPayUser> list, DtuPayUser user) throws Exception {
         try {
             bank.getAccount(user.getBankID());
@@ -68,7 +69,7 @@ public class AccountManager {
             throw new Exception("must have a bank account to register");
         }
     }
-
+    //@author s174293 - Kasper Jørgensen
     public String genID(){
         String id;
         do {
@@ -76,7 +77,7 @@ public class AccountManager {
         } while (!idChecker(id));
         return id;
     }
-
+    //@author s202772 - Gustav Kinch
     public Boolean idChecker(String id){
         for (DtuPayUser customer : customers) {
             if (customer.getDtuPayID().equals(id)){
@@ -99,7 +100,7 @@ public class AccountManager {
         return merchants;
     }
 
-
+    //@author s215949 - Zelin Li
     public DtuPayUser getUserById(List<DtuPayUser> list, String id) throws Exception {
         for (DtuPayUser dtuPayUser : list) {
             if (dtuPayUser.getDtuPayID().equals(id)){

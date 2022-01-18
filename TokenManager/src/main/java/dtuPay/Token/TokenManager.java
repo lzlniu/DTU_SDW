@@ -16,6 +16,7 @@ public class TokenManager {
     private Map<DtuPayUser,List<String>>activeTokens;
     private Map<DtuPayUser,List<String>>usedTokens;
 
+    //@author s164422 - Thomas Bergen
     public TokenManager(MessageQueue queue){
         activeTokens = new HashMap<>();
         usedTokens = new HashMap<>();
@@ -25,6 +26,7 @@ public class TokenManager {
         mq.addHandler("SuccessfulPayment", this::depleteToken);
     }
 
+    //@author s174293 - Kasper Jørgensen
     private void depleteToken(Event e) {
         var payment = e.getArgument(0, Payment.class);
         var customer = e.getArgument(1, DtuPayUser.class);
@@ -34,7 +36,7 @@ public class TokenManager {
         if (!usedTokens.keySet().contains(customer)) usedTokens.put(customer, new ArrayList<>());
         usedTokens.get(customer).add(payment.getCustomerToken());
     }
-
+    //@author s202772 - Gustav Kinch
     public List<String> generateTokenList(int n) throws Exception {
         List<String> returnList = new ArrayList<>();
         if (n < 1 || n > 5) {
@@ -46,12 +48,12 @@ public class TokenManager {
         }
         return returnList;
     }
-
+    //@author s215949 - Zelin Li
     public void handleCustomerCanGetTokens(Event e) {
         var registered = e.getArgument(0, boolean.class);
         isRegistered.complete(registered);
     }
-
+    //@author s213578 - Johannes Pedersen
     public List<String> generateTokens(DtuPayUser user, int n) throws Exception {
         isRegistered = new CompletableFuture<>();
         Event event = new Event("GetTokensRequested", new Object[]{user});
@@ -78,7 +80,7 @@ public class TokenManager {
     public List<String> getUserTokens(DtuPayUser customer){
         return activeTokens.get(customer);
     } // Zelin Li
-
+    //@author s212643 - Xingguang Geng
     public void getCustomerFromToken(Event e) {
 
         var customerToken = e.getArgument(0, String.class);

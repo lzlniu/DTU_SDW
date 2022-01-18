@@ -34,6 +34,7 @@ public class RabbitMqQueue implements MessageQueue {
 		channel = setUpChannel(hostname);
 	}
 
+	//@author s174293 - Kasper Jørgensen
 	@Override
 	public void publish(Event event) {
 		String message = new Gson().toJson(event);
@@ -44,7 +45,7 @@ public class RabbitMqQueue implements MessageQueue {
 			throw new Error(e);
 		}
 	}
-
+	//@author s202772 - Gustav Kinch
 	private Channel setUpChannel(String hostname) {
 		Channel channel;
 		try {
@@ -59,7 +60,7 @@ public class RabbitMqQueue implements MessageQueue {
 		}
 		return channel;
 	}
-
+	//@author s215949 - Zelin Li
 	@Override
 	public void addHandler(String eventType, Consumer<Event> handler) {
 		System.out.println("[x] handler "+handler+" for event type " + eventType + " installed");

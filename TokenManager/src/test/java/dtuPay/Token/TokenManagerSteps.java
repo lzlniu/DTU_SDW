@@ -30,6 +30,7 @@ public class TokenManagerSteps {
     boolean customerIsRegistered;
     CompletableFuture<Boolean> responseRecieved;
 
+    //@author s202772 - Gustav Kinch
     @Given("request {int} tokens")
     public void aCustomerRequestTokens(int amount) {
         try {
@@ -38,27 +39,29 @@ public class TokenManagerSteps {
             this.e = e;
         }
     }
-
+    //@author s215949 - Zelin Li
     @Then("the tokens list is generated")
     public void theTokensListIsGenerated() {
         assertFalse(tokens.isEmpty());
     }
 
+    //@author s213578 - Johannes Pedersen
     @Then("the tokens list is not generated")
     public void theTokensListIsNotGenerated() {
         assertTrue(tokens.isEmpty());
     }
-
+    //@author s212643 - Xingguang Geng
     @Then("{int} unique tokens is returned")
     public void uniqueTokensIsReturned(int amount) {
         assertEquals(amount, tokens.size());
     }
 
+    //@author s164422 - Thomas Bergen
     @Then("error message is {string}")
     public void errorMessageIs(String msg) {
         assertEquals(msg, e.getMessage());
     }
-
+    //@author s174293 - Kasper Jørgensen
     @Given("a list of {int} tokens is requested by a customer")
     public void aListOfTokensIsRequested(int amount) throws ExecutionException, InterruptedException, TimeoutException {
         customerA.setFirstName("John");
@@ -78,7 +81,7 @@ public class TokenManagerSteps {
         manager.handleCustomerCanGetTokens(new Event("", new Object[]{true}));
         responseRecieved.get(10, TimeUnit.SECONDS);
     }
-
+    //@author s202772 - Gustav Kinch
     @When("the customer request to generate {int} new tokens")
     public void theCustomerRequestToGenerateNewTokensList(int amount){
         responseRecieved = new CompletableFuture<>();
@@ -92,32 +95,32 @@ public class TokenManagerSteps {
             }
         }).start();
     }
-
+    //@author s215949 - Zelin Li
     @Then("the customer have {int} tokens in the list")
     public void theCustomerHaveTokensInTheList(int amount) {
         assertEquals(amount, manager.getUserTokens(customerA).size());
     }
-
+    //@author s213578 - Johannes Pedersen
     @When("the TokenManager check whether the customer exist")
     public void theTokenManagerCheckWhetherTheCustomerExist() {
     }
-
+    //@author s212643 - Xingguang Geng
     @Given("the customer is registered")
     public void theCustomerIsRegistered() {
         customerIsRegistered = true;
     }
-
+    //@author s164422 - Thomas Bergen
     @Then("the {string} event is sent")
     public void theEventIsSent(String topic) {
         Event event = new Event(topic, new Object[]{customerA});
         verify(queue).publish(event);
     }
-
+    //@author  s174293 - Kasper Jørgensen
     @When("the {string} event is recieved")
     public void theEventIsRecieved(String topic) {
         manager.handleCustomerCanGetTokens(new Event(topic, new Object[]{customerIsRegistered}));
     }
-
+    //@author s202772 - Gustav Kinch
     @Then("response is received from manager")
     public void responseIsReceivedFromManager()  {
         try {
@@ -128,7 +131,7 @@ public class TokenManagerSteps {
         }
 
     }
-
+    //@author s215949 - Zelin Li
     @And("the customer is not registered")
     public void theCustomerIsNotRegistered() {
         customerIsRegistered = false;

@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response;
 @Path("/payments")
 public class PaymentResource {
     PaymentManager pay = new PaymentManagerFactory().getManager();
-
+    //@author s212643 - Xingguang Geng
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createPayment(Payment p) {

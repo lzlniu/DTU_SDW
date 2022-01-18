@@ -10,7 +10,7 @@ import java.util.List;
 @Path("/tokens")
 public class TokenResource {
     TokenManager manager = new TokenManagerFactory().getManager();
-
+    //@author s174293 - Kasper Jørgensen
     @POST
     @Path("/{customer}")
     @Consumes(MediaType.APPLICATION_JSON)

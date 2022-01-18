@@ -27,17 +27,18 @@ public class ReportSteps {
     Payment p;
     DtuPayUser customer;
 
+    //@author s202772 - Gustav Kinch
     @Given("a payment")
     public void aPayment(){
         p = new Payment("customer", "merchant", BigDecimal.valueOf(42));
         customer = new DtuPayUser("I", "Payed", "myID", "bankID", "123456-7890");
     }
-
+    //@author s215949 - Zelin Li
     @When("the {string} event is sent with that payment")
     public void theEventIsSentWithThatPayment(String arg0) {
         manager.logPayment(new Event("SuccessfulPayment", new Object[]{p,customer}));
     }
-
+    //@author s213578 - Johannes Pedersen
     @Then("the log contains that payment")
     public void theLogContainsThatPayment() {
         assertTrue(manager.getPayments().contains(p));

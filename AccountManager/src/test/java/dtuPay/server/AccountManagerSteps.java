@@ -28,6 +28,7 @@ public class AccountManagerSteps {
     Exception e = new Exception();
     List<String> bankAccounts;
 
+    //@author s215949 - Zelin Li
     @Before
     public void create_blank_list_of_created_accounts() {
         bankAccounts = new ArrayList<String>();
@@ -43,7 +44,7 @@ public class AccountManagerSteps {
             }
         }
     }
-
+    //@author s213578 - Johannes Pedersen
     @Given("a customer with a bank account with balance")
     public void a_customer_with_a_bank_account_with_balance() throws BankServiceException_Exception {
         customer.setFirstName("John");
@@ -56,7 +57,7 @@ public class AccountManagerSteps {
         customer.setBankID(bank.createAccountWithBalance(user, BigDecimal.valueOf(9204.52)));
         bankAccounts.add(customer.getBankID());
     }
-
+    //@author s212643 - Xingguang Geng
     @When("the customer registers with DTU Pay")
     public void the_customer_registers_with_dtu_pay() throws Exception {
         try {
@@ -65,13 +66,13 @@ public class AccountManagerSteps {
             this.e = e;
         }
     }
-
+    //@author s164422 - Thomas Bergen
     @Then("that customer is registered with DTU Pay")
     public void that_customer_is_registered_with_dtu_pay() {
         List<DtuPayUser> list = manager.getCustomers();
         assertTrue(list.contains(customer));
     }
-
+    //@author s174293 - Kasper Jørgensen
     @Given("a merchant with a bank account with balance")
     public void a_merchant_with_a_bank_account_with_balance() throws BankServiceException_Exception {
         merchant.setFirstName("Jane");
@@ -84,7 +85,7 @@ public class AccountManagerSteps {
         merchant.setBankID(bank.createAccountWithBalance(user, BigDecimal.valueOf(5404.52)));
         bankAccounts.add(merchant.getBankID());
     }
-
+    //@author s202772 - Gustav Kinch
     @When("the merchant registers with DTU Pay")
     public void the_merchant_registers_with_dtu_pay() throws Exception {
         try {
@@ -93,27 +94,27 @@ public class AccountManagerSteps {
             this.e = e;
         }
     }
-
+    //@author s215949 - Zelin Li
     @Then("that merchant is registered with DTU Pay")
     public void that_merchant_is_registered_with_dtu_pay() {
         List<DtuPayUser> list = manager.getMerchants();
         assertTrue(list.contains(merchant));
     }
-
+    //@author s213578 - Johannes Pedersen
     @Given("a customer with no bank account")
     public void a_customer_with_no_bank_account() {
         customer.setFirstName("John");
         customer.setLastName("Doe");
         customer.setCPR("010170-0101");
     }
-
+    //@author s212643 - Xingguang Geng
     @Given("a merchant with no bank account")
     public void a_merchant_with_no_bank_account() {
         merchant.setFirstName("Jane");
         merchant.setLastName("Doe");
         merchant.setCPR("020280-0202");
     }
-
+    //@author s164422 - Thomas Bergen
     @Then("an error message is returned saying {string}")
     public void an_error_message_is_returned_saying(String string) {
         assertEquals(string, e.getMessage());
