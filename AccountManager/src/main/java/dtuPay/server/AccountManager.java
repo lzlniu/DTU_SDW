@@ -29,7 +29,6 @@ public class AccountManager {
     }
     //@author  s174293 - Kasper Jørgensen
     public void setupHandlers() {
-
         queue.addHandler("GetTokensRequested", this::handleTokensRequested);
         queue.addHandler("GetMerchantFromID", this::handleGetMerchantFromID);
     }
@@ -45,9 +44,10 @@ public class AccountManager {
     }
     //@author s215949 - Zelin Li
     private void handleTokensRequested(Event event) {
-        var customer = event.getArgument(0, DtuPayUser.class);
+        var eventID = event.getArgument(0, UUID.class);
+        var customer = event.getArgument(1, DtuPayUser.class);
         boolean isRegistered = customers.contains(customer);
-        Event response = new Event("CustomerRegisteredForTokens", new Object[]{isRegistered});
+        Event response = new Event("CustomerRegisteredForTokens", new Object[]{eventID, isRegistered});
         queue.publish(response);
     }
     //@author s213578 - Johannes Pedersen

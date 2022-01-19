@@ -44,3 +44,14 @@ Feature: Tokens
     And the "CustomerRegisteredForTokens" event is recieved
     Then response is received from manager
     And error message is "customer is not registered"
+  #@author s174293 - Kasper Jørgensen
+  Scenario: 2 customers requesting tokens at the same time
+    Given two registered customers
+    When customer 1 requests to generate 3 new tokens
+    Then a "GetTokensRequested" event is sent for customer 1
+    When customer 2 requests to generate 5 new tokens
+    Then a "GetTokensRequested" event is sent for customer 2
+    When the "CustomerRegisteredForTokens" event is received by customer 1
+    And the "CustomerRegisteredForTokens" event is received by customer 2
+    Then 3 unique tokens is returned to the first customer
+    And 5 unique tokens is returned to the second customer

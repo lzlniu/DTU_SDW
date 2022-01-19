@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 public class TokenManager {
     private MessageQueue mq;
-    private CompletableFuture<Boolean> isRegistered;
+    private Map<UUID, CompletableFuture<Boolean>> isRegistered;
     private Map<DtuPayUser,List<String>>activeTokens;
     private Map<DtuPayUser,List<String>>usedTokens;
 
@@ -20,6 +20,7 @@ public class TokenManager {
     public TokenManager(MessageQueue queue){
         activeTokens = new HashMap<>();
         usedTokens = new HashMap<>();
+        isRegistered = new HashMap<>();
         this.mq = queue;
         mq.addHandler("CustomerRegisteredForTokens", this::handleCustomerCanGetTokens);
         mq.addHandler("GetCustomerFromToken", this::getCustomerFromToken);
@@ -50,15 +51,17 @@ public class TokenManager {
     }
     //@author s215949 - Zelin Li
     public void handleCustomerCanGetTokens(Event e) {
-        var registered = e.getArgument(0, boolean.class);
-        isRegistered.complete(registered);
+        var eventID = e.getArgument(0, UUID.class);
+        var registered = e.getArgument(1, boolean.class);
+        isRegistered.get(eventID).complete(registered);
     }
     //@author s213578 - Johannes Pedersen
     public List<String> generateTokens(DtuPayUser user, int n) throws Exception {
-        isRegistered = new CompletableFuture<>();
-        Event event = new Event("GetTokensRequested", new Object[]{user});
+        UUID eventID = UUID.randomUUID();
+        isRegistered.put(eventID, new CompletableFuture<>());
+        Event event = new Event("GetTokensRequested", new Object[]{eventID, user});
         mq.publish(event);
-        boolean registered = isRegistered.get(10, TimeUnit.SECONDS);
+        boolean registered = isRegistered.get(eventID).get(10, TimeUnit.SECONDS);
 
         if (!registered) {throw new Exception("customer is not registered");}
 
