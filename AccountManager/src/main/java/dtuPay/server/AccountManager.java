@@ -34,12 +34,13 @@ public class AccountManager {
     }
     //@author s202772 - Gustav Kinch
     private void handleGetMerchantFromID(Event e) {
-        var merchantID = e.getArgument(0, String.class);
+        UUID eventID = e.getArgument(0, UUID.class);
+        var merchantID = e.getArgument(1, String.class);
         try{
             DtuPayUser merchant = getUserById(merchants, merchantID);
-            queue.publish(new Event("MerchantFromIDFound", new Object[]{true, merchant}));
+            queue.publish(new Event("MerchantFromIDFound", new Object[]{eventID, true, merchant}));
         }catch (Exception exception){
-            queue.publish(new Event("MerchantFromIDFound", new Object[]{false,null}));
+            queue.publish(new Event("MerchantFromIDFound", new Object[]{eventID, false,null}));
         }
     }
     //@author s215949 - Zelin Li

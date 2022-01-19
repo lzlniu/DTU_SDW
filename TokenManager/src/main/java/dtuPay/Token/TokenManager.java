@@ -85,15 +85,15 @@ public class TokenManager {
     } // Zelin Li
     //@author s212643 - Xingguang Geng
     public void getCustomerFromToken(Event e) {
-
-        var customerToken = e.getArgument(0, String.class);
+        UUID eventID = e.getArgument(0, UUID.class);
+        var customerToken = e.getArgument(1, String.class);
 
         for(DtuPayUser user : activeTokens.keySet()){
             var tokens = activeTokens.get(user);
             if(tokens.contains(customerToken)) {
-                mq.publish(new Event("CustomerFromToken", new Object[]{true, user}));
+                mq.publish(new Event("CustomerFromToken", new Object[]{eventID, true, user}));
             }
         }
-        mq.publish(new Event("CustomerFromToken", new Object[]{false, null}));
+        mq.publish(new Event("CustomerFromToken", new Object[]{eventID, false, null}));
     }
 }
