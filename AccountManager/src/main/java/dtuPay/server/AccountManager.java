@@ -31,7 +31,23 @@ public class AccountManager {
     public void setupHandlers() {
         queue.addHandler("GetTokensRequested", this::handleTokensRequested);
         queue.addHandler("GetMerchantFromID", this::handleGetMerchantFromID);
+        queue.addHandler("CustomerFromToken", this::handleCustomerFromToken);
     }
+
+    private void handleCustomerFromToken(Event e)  {
+        UUID eventID = e.getArgument(0, UUID.class);
+        var activeToken = e.getArgument(1, boolean.class);
+        DtuPayUser customer = null;
+        if (activeToken) {
+            try {
+                customer = getUserById(customers, e.getArgument(2, String.class));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        queue.publish(new Event("CustomerInformationFromToken", new Object[]{eventID, activeToken, customer}));
+    }
+
     //@author s202772 - Gustav Kinch
     private void handleGetMerchantFromID(Event e) {
         UUID eventID = e.getArgument(0, UUID.class);
@@ -46,8 +62,14 @@ public class AccountManager {
     //@author s215949 - Zelin Li
     private void handleTokensRequested(Event event) {
         var eventID = event.getArgument(0, UUID.class);
-        var customer = event.getArgument(1, DtuPayUser.class);
-        boolean isRegistered = customers.contains(customer);
+        var customerID = event.getArgument(1, String.class);
+        boolean isRegistered = false;
+        for (DtuPayUser customer : customers) {
+            if (customer.getDtuPayID().equals(customerID)){
+                isRegistered = true;
+                break;
+            }
+        }
         Event response = new Event("CustomerRegisteredForTokens", new Object[]{eventID, isRegistered});
         queue.publish(response);
     }

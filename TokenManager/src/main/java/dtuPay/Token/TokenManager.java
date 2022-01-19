@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 public class TokenManager {
     private MessageQueue mq;
     private Map<UUID, CompletableFuture<Boolean>> isRegistered;
-    private Map<DtuPayUser,List<String>>activeTokens;
+    private Map<String,List<String>>activeTokens; //Maps userID's to a list of tokens
 
     //@author s164422 - Thomas Bergen
     public TokenManager(MessageQueue queue){
@@ -28,9 +28,9 @@ public class TokenManager {
     //@author s174293 - Kasper Jørgensen
     private void depleteToken(Event e) {
         var payment = e.getArgument(0, Payment.class);
-        var customer = e.getArgument(1, DtuPayUser.class);
+        var customerID = e.getArgument(1, String.class);
 
-        activeTokens.get(customer).remove(payment.getCustomerToken());
+        activeTokens.get(customerID).remove(payment.getCustomerToken());
     }
     //@author s202772 - Gustav Kinch
     public List<String> generateTokenList(int n) throws Exception {
@@ -51,42 +51,42 @@ public class TokenManager {
         isRegistered.get(eventID).complete(registered);
     }
     //@author s213578 - Johannes Pedersen
-    public List<String> generateTokens(DtuPayUser user, int n) throws Exception {
+    public List<String> generateTokens(String customerID, int n) throws Exception {
         UUID eventID = UUID.randomUUID();
         isRegistered.put(eventID, new CompletableFuture<>());
-        Event event = new Event("GetTokensRequested", new Object[]{eventID, user});
+        Event event = new Event("GetTokensRequested", new Object[]{eventID, customerID});
         mq.publish(event);
         boolean registered = isRegistered.get(eventID).get(10, TimeUnit.SECONDS);
 
         if (!registered) {throw new Exception("customer is not registered");}
 
-        if (! activeTokens.containsKey(user)) {
-            activeTokens.put(user, generateTokenList(n));
+        if (! activeTokens.containsKey(customerID)) {
+            activeTokens.put(customerID, generateTokenList(n));
         }
-        else if (activeTokens.get(user).size() <= 1 ) {
-            activeTokens.get(user).addAll(generateTokenList(n));
+        else if (activeTokens.get(customerID).size() <= 1 ) {
+            activeTokens.get(customerID).addAll(generateTokenList(n));
         } else {
             throw new Exception("User already has more than 1 token");
         }
-        return activeTokens.get(user);
+        return activeTokens.get(customerID);
     }
 
     public boolean depleteToken(String tokenID){
         return false;
     }
 
-    public List<String> getUserTokens(DtuPayUser customer){
-        return activeTokens.get(customer);
+    public List<String> getUserTokens(String customerID){
+        return activeTokens.get(customerID);
     } // Zelin Li
     //@author s212643 - Xingguang Geng
     public void getCustomerFromToken(Event e) {
         UUID eventID = e.getArgument(0, UUID.class);
         var customerToken = e.getArgument(1, String.class);
 
-        for(DtuPayUser user : activeTokens.keySet()){
-            var tokens = activeTokens.get(user);
+        for(String customerID : activeTokens.keySet()){
+            var tokens = activeTokens.get(customerID);
             if(tokens.contains(customerToken)) {
-                mq.publish(new Event("CustomerFromToken", new Object[]{eventID, true, user}));
+                mq.publish(new Event("CustomerFromToken", new Object[]{eventID, true, customerID}));
             }
         }
         mq.publish(new Event("CustomerFromToken", new Object[]{eventID, false, null}));

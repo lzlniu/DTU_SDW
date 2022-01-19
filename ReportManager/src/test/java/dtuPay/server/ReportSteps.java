@@ -36,7 +36,7 @@ public class ReportSteps {
     //@author s215949 - Zelin Li
     @When("the {string} event is sent with that payment")
     public void theEventIsSentWithThatPayment(String arg0) {
-        manager.logPayment(new Event("SuccessfulPayment", new Object[]{p,customer}));
+        manager.logPayment(new Event("SuccessfulPayment", new Object[]{p,customer.getDtuPayID()}));
     }
     //@author s213578 - Johannes Pedersen
     @Then("the log contains that payment")

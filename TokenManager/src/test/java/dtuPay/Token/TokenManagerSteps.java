@@ -79,7 +79,7 @@ public class TokenManagerSteps {
         eventReceived1 = new CompletableFuture<>();
         new Thread(() -> {
             try {
-                var tokens = manager.generateTokens(customerA, amount);
+                var tokens = manager.generateTokens(customerA.getDtuPayID(), amount);
                 responseReceived.complete(true);
             } catch (Exception e) {
                 this.e = e;
@@ -110,7 +110,7 @@ public class TokenManagerSteps {
         responseReceived = new CompletableFuture<>();
         new Thread(() -> {
             try {
-                var tokens = manager.generateTokens(customerA, amount);
+                var tokens = manager.generateTokens(customerA.getDtuPayID(), amount);
                 responseReceived.complete(true);
             } catch (Exception e) {
                 responseReceived.complete(false);
@@ -122,7 +122,7 @@ public class TokenManagerSteps {
     //@author s215949 - Zelin Li
     @Then("the customer have {int} tokens in the list")
     public void theCustomerHaveTokensInTheList(int amount) {
-        assertEquals(amount, manager.getUserTokens(customerA).size());
+        assertEquals(amount, manager.getUserTokens(customerA.getDtuPayID()).size());
     }
     //@author s213578 - Johannes Pedersen
     @When("the TokenManager check whether the customer exist")
@@ -169,7 +169,7 @@ public class TokenManagerSteps {
             eventReceived1 = new CompletableFuture<>();
             new Thread(() -> {
                 try {
-                    tokens = manager.generateTokens(customerA, amount);
+                    tokens = manager.generateTokens(customerA.getDtuPayID(), amount);
                     responseReceived.complete(true);
                 } catch (Exception e) {
                     responseReceived.complete(false);
@@ -181,7 +181,7 @@ public class TokenManagerSteps {
             eventReceived2 = new CompletableFuture<>();
             new Thread(() -> {
                 try {
-                    tokens2 = manager.generateTokens(customerB, amount);
+                    tokens2 = manager.generateTokens(customerB.getDtuPayID(), amount);
                     responseReceived2.complete(true);
                 } catch (Exception e) {
                     responseReceived2.complete(false);
@@ -233,7 +233,7 @@ public class TokenManagerSteps {
         doAnswer(invocation -> {
             Event e = invocation.getArgument(0);
             var eventID = e.getArgument(0, UUID.class);
-            var customerID = e.getArgument(1, DtuPayUser.class).getDtuPayID();
+            var customerID = e.getArgument(1, String.class);
             if (customerID.equals(customerA.getDtuPayID())) {
                 eventReceived1.complete(true);
                 eventID1 = eventID;

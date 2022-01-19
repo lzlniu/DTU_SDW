@@ -38,10 +38,11 @@ public class ReportManager {
     public Set<Payment> getPayments() {
         return payments.keySet();
     }
+
     //@author s215949 - Zelin Li
     public void logPayment(Event e) {
         var payment = e.getArgument(0,Payment.class);
-        String customerID = e.getArgument(1,DtuPayUser.class).getDtuPayID();
+        String customerID = e.getArgument(1,String.class);
         payments.put(payment, customerID);
     }
 }

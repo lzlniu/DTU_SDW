@@ -25,7 +25,7 @@ public class PaymentManager {
     public PaymentManager(RabbitMqQueue mq){
         this.mq = mq;
         bank = new BankServiceService().getBankServicePort();
-        mq.addHandler("CustomerFromToken", this::handleCustomerFromToken);
+        mq.addHandler("CustomerInformationFromToken", this::handleCustomerInformationFromToken);
         mq.addHandler("MerchantFromIDFound", this::handleMerchantFromIDFound);
     }
     //@author s174293 - Kasper Jørgensen
@@ -40,7 +40,7 @@ public class PaymentManager {
         merchantFound.get(eventID).complete(isMerchantFound);
     }
     //@author s202772 - Gustav Kinch
-    private void handleCustomerFromToken(Event e) {
+    private void handleCustomerInformationFromToken(Event e) {
         UUID eventID = e.getArgument(0, UUID.class);
         boolean isCustomerFound = e.getArgument(1, boolean.class);
 
@@ -68,7 +68,7 @@ public class PaymentManager {
                 p.getAmount(), merchant.get(eventID).getFirstName() + " " + merchant.get(eventID).getLastName() + " Received payment of" +
                         p.getAmount() + "kr.");
 
-        mq.publish(new Event("SuccessfulPayment", new Object[]{p, customer.get(eventID)}));
+        mq.publish(new Event("SuccessfulPayment", new Object[]{p, customer.get(eventID).getDtuPayID()}));
         return true;
     }
 }
