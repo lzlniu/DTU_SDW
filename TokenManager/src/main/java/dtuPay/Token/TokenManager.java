@@ -14,12 +14,10 @@ public class TokenManager {
     private MessageQueue mq;
     private Map<UUID, CompletableFuture<Boolean>> isRegistered;
     private Map<DtuPayUser,List<String>>activeTokens;
-    private Map<DtuPayUser,List<String>>usedTokens;
 
     //@author s164422 - Thomas Bergen
     public TokenManager(MessageQueue queue){
         activeTokens = new HashMap<>();
-        usedTokens = new HashMap<>();
         isRegistered = new HashMap<>();
         this.mq = queue;
         mq.addHandler("CustomerRegisteredForTokens", this::handleCustomerCanGetTokens);
@@ -33,9 +31,6 @@ public class TokenManager {
         var customer = e.getArgument(1, DtuPayUser.class);
 
         activeTokens.get(customer).remove(payment.getCustomerToken());
-
-        if (!usedTokens.keySet().contains(customer)) usedTokens.put(customer, new ArrayList<>());
-        usedTokens.get(customer).add(payment.getCustomerToken());
     }
     //@author s202772 - Gustav Kinch
     public List<String> generateTokenList(int n) throws Exception {
