@@ -49,9 +49,9 @@ public class PaymentManager {
         }
         customerFound.get(eventID).complete(isCustomerFound);
     }
-    //@author s215949 - Zelin Li
-    public boolean createPayment(Payment p) throws Exception {
-        UUID eventID = UUID.randomUUID();
+
+    //@author s202772 - Gustav Kinch
+    private void getAndValidatepaymentInfo(UUID eventID, Payment p) throws Exception {
         customerFound.put(eventID, new CompletableFuture<>());
         mq.publish(new Event("GetCustomerFromToken", new Object[] {eventID, p.getCustomerToken()}));
         merchantFound.put(eventID, new CompletableFuture<>());
@@ -61,6 +61,12 @@ public class PaymentManager {
 
         if (!customerIsFound) throw new Exception("Customer token not valid");
         if (!merchantIsFound) throw new Exception("merchant id is unknown");
+    }
+
+    //@author s215949 - Zelin Li
+    public boolean createPayment(Payment p) throws Exception {
+        UUID eventID = UUID.randomUUID();
+        getAndValidatepaymentInfo(eventID, p);
 
         bank.transferMoneyFromTo(
                 customer.get(eventID).getBankID(),

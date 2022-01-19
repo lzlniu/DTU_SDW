@@ -71,10 +71,6 @@ public class TokenManager {
         return activeTokens.get(customerID);
     }
 
-    public boolean depleteToken(String tokenID){
-        return false;
-    }
-
     public List<String> getUserTokens(String customerID){
         return activeTokens.get(customerID);
     } // Zelin Li
