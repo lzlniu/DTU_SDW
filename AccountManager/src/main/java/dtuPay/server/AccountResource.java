@@ -23,7 +23,7 @@ public class AccountResource {
     @Path("/customers")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createCustomer(DtuPayUser customer) {
-        String newCid = null;
+        String newCid;
         try {
             newCid = account.registerCustomer(customer);
             return Response.ok().entity(newCid).build();
@@ -49,7 +49,7 @@ public class AccountResource {
     @Path("/merchants")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createMerchant(DtuPayUser merchant) {
-        String newMid = null;
+        String newMid;
         try {
             newMid = account.registerMerchant(merchant);
             return Response.ok().entity(newMid).build();

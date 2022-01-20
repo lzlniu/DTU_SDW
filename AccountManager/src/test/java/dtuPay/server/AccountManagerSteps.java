@@ -34,7 +34,7 @@ public class AccountManagerSteps {
     //@author s215949 - Zelin Li
     @Before
     public void create_blank_list_of_created_accounts() {
-        bankAccounts = new ArrayList<String>();
+        bankAccounts = new ArrayList<>();
     }
 
     @After
@@ -62,7 +62,7 @@ public class AccountManagerSteps {
     }
     //@author s212643 - Xingguang Geng
     @When("the customer registers with DTU Pay")
-    public void the_customer_registers_with_dtu_pay() throws Exception {
+    public void the_customer_registers_with_dtu_pay() {
         try {
             customer.setDtuPayID(manager.registerCustomer(customer));
         } catch (Exception e) {
@@ -90,7 +90,7 @@ public class AccountManagerSteps {
     }
     //@author s202772 - Gustav Kinch
     @When("the merchant registers with DTU Pay")
-    public void the_merchant_registers_with_dtu_pay() throws Exception {
+    public void the_merchant_registers_with_dtu_pay() {
         try {
             merchant.setDtuPayID(manager.registerMerchant(merchant));
         } catch (Exception e) {

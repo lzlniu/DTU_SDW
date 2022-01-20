@@ -8,8 +8,6 @@ import io.cucumber.java.en.When;
 import messaging.Event;
 import messaging.MessageQueue;
 import objects.DtuPayUser;
-import org.junit.vintage.engine.discovery.IsPotentialJUnit4TestClass;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -17,7 +15,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -34,6 +31,7 @@ public class TokenManagerSteps {
     boolean customerBIsRegistered;
     CompletableFuture<Boolean> responseReceived, responseReceived2;
     CompletableFuture<Boolean> eventReceived1, eventReceived2;
+    String eventMsg1, eventMsg2;
     UUID eventID1, eventID2;
 
     //@author s202772 - Gustav Kinch
@@ -79,7 +77,7 @@ public class TokenManagerSteps {
         eventReceived1 = new CompletableFuture<>();
         new Thread(() -> {
             try {
-                var tokens = manager.generateTokens(customerA.getDtuPayID(), amount);
+                manager.generateTokens(customerA.getDtuPayID(), amount);
                 responseReceived.complete(true);
             } catch (Exception e) {
                 this.e = e;
@@ -110,7 +108,7 @@ public class TokenManagerSteps {
         responseReceived = new CompletableFuture<>();
         new Thread(() -> {
             try {
-                var tokens = manager.generateTokens(customerA.getDtuPayID(), amount);
+                manager.generateTokens(customerA.getDtuPayID(), amount);
                 responseReceived.complete(true);
             } catch (Exception e) {
                 responseReceived.complete(false);
@@ -220,27 +218,30 @@ public class TokenManagerSteps {
     @Then("a {string} event is sent for customer {int}")
     public void aEventIsSentForCustomer(String arg0, int arg1) throws ExecutionException, InterruptedException, TimeoutException {
         if (arg1 == 1){
+            assertEquals(arg0, eventMsg1);
             assertTrue(eventReceived1.get(10, TimeUnit.SECONDS));
         } else {
+            assertEquals(arg0, eventMsg2);
             assertTrue(eventReceived2.get(10, TimeUnit.SECONDS));
         }
     }
-
-
 
     @Before
     public void aServiceHandlingCreatedRequests() {
         doAnswer(invocation -> {
             Event e = invocation.getArgument(0);
-            var eventID = e.getArgument(0, UUID.class);
-            var customerID = e.getArgument(1, String.class);
+            UUID eventID = e.getArgument(0, UUID.class);
+            String customerID = e.getArgument(1, String.class);
+            String eventMsg = e.getType();
             if (customerID.equals(customerA.getDtuPayID())) {
                 eventReceived1.complete(true);
                 eventID1 = eventID;
+                eventMsg1 = eventMsg;
             }
             else {
                 eventReceived2.complete(true);
                 eventID2 = eventID;
+                eventMsg2 = eventMsg;
             }
             return null;
         }).when(queue).publish(any(Event.class));
