@@ -31,6 +31,19 @@ public class AccountResource {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         }
     }
+
+    //@author s202772 - Gustav Kinch
+    @DELETE
+    @Path("/customers/{id}")
+    public Response deleteCustomer(@PathParam("id") String customerID){
+        try {
+            account.deleteCustomer(customerID);
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
+    }
+
     //@author s174293 - Kasper Jørgensen
     @POST
     @Path("/merchants")
@@ -40,6 +53,18 @@ public class AccountResource {
         try {
             newMid = account.registerMerchant(merchant);
             return Response.ok().entity(newMid).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
+    }
+
+    //@author s212643 - Xingguang Geng
+    @DELETE
+    @Path("/merchants/{id}")
+    public Response deleteMerchant(@PathParam("id") String merchantID){
+        try {
+            account.deleteMerchant(merchantID);
+            return Response.ok().build();
         } catch (Exception e) {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         }

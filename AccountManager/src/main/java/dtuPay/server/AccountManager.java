@@ -136,4 +136,14 @@ public class AccountManager {
             throw new Exception("merchant id is unknown");
         }
     }
+
+    public void deleteCustomer(String customerID) throws Exception {
+        DtuPayUser userToDelete = getUserById(customers, customerID);
+        customers.remove(userToDelete);
+    }
+
+    public void deleteMerchant(String merchantID) throws Exception {
+        DtuPayUser userToDelete = getUserById(merchants, merchantID);
+        merchants.remove(userToDelete);
+    }
 }
