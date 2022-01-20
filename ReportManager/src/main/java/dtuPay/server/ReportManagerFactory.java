@@ -9,7 +9,7 @@ public class ReportManagerFactory {
         if (paymentManager != null) {
             return paymentManager;
         }
-        var mq = new RabbitMqQueue("rabbitMq");
+        RabbitMqQueue mq = new RabbitMqQueue("rabbitMq");
         paymentManager = new ReportManager(mq);
         return paymentManager;
     }

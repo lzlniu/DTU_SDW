@@ -1,7 +1,5 @@
 package dtuPay.Token;
 
-import objects.DtuPayUser;
-
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -14,9 +12,9 @@ public class TokenResource {
     @POST
     @Path("/{customerID}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response generateTokens(@PathParam("customerID") String customerID, int n) {
+    public Response generateTokens(@PathParam("customerID") String cid, int n) {
         try {
-            List<String> newTokens = manager.generateTokens(customerID, n);
+            List<String> newTokens = manager.generateTokens(cid, n);
             return Response.ok().entity(newTokens).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();

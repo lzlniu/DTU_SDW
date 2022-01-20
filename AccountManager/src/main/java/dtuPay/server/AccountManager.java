@@ -12,31 +12,30 @@ import java.util.List;
 import java.util.UUID;
 
 public class AccountManager {
-    private MessageQueue queue;
-
+    private MessageQueue mq;
     private List<DtuPayUser> customers;
     private List<DtuPayUser> merchants;
-
     private BankService bank;
 
     //@author s164422 - Thomas Bergen
     public AccountManager(MessageQueue queue) {
-        this.queue = queue;
+        this.mq = queue;
         customers = new ArrayList<>();
         merchants = new ArrayList<>();
         bank = new BankServiceService().getBankServicePort();
         setupHandlers();
     }
+
     //@author  s174293 - Kasper Jørgensen
     private void setupHandlers() {
-        queue.addHandler("GetTokensRequested", this::handleTokensRequested);
-        queue.addHandler("GetMerchantFromID", this::handleGetMerchantFromID);
-        queue.addHandler("CustomerFromToken", this::handleCustomerFromToken);
+        mq.addHandler("GetTokensRequested", this::handleTokensRequested);
+        mq.addHandler("GetMerchantFromID", this::handleGetMerchantFromID);
+        mq.addHandler("CustomerFromToken", this::handleCustomerFromToken);
     }
 
     private void handleCustomerFromToken(Event e)  {
         UUID eventID = e.getArgument(0, UUID.class);
-        var activeToken = e.getArgument(1, boolean.class);
+        boolean activeToken = e.getArgument(1, boolean.class);
         DtuPayUser customer = null;
         if (activeToken) {
             try {
@@ -45,34 +44,35 @@ public class AccountManager {
                 ex.printStackTrace();
             }
         }
-        queue.publish(new Event("CustomerInformationFromToken", new Object[]{eventID, activeToken, customer}));
+        mq.publish(new Event("CustomerInformationFromToken", new Object[]{eventID, activeToken, customer}));
     }
 
     //@author s202772 - Gustav Kinch
     private void handleGetMerchantFromID(Event e) {
         UUID eventID = e.getArgument(0, UUID.class);
-        var merchantID = e.getArgument(1, String.class);
-        try{
-            DtuPayUser merchant = getUserById(merchants, merchantID);
-            queue.publish(new Event("MerchantFromIDFound", new Object[]{eventID, true, merchant}));
-        }catch (Exception exception){
-            queue.publish(new Event("MerchantFromIDFound", new Object[]{eventID, false,null}));
+        String mid = e.getArgument(1, String.class);
+        try {
+            DtuPayUser merchant = getUserById(merchants, mid);
+            mq.publish(new Event("MerchantFromIDFound", new Object[]{eventID, true, merchant}));
+        } catch (Exception exception){
+            mq.publish(new Event("MerchantFromIDFound", new Object[]{eventID, false,null}));
         }
     }
+
     //@author s215949 - Zelin Li
     private void handleTokensRequested(Event event) {
-        var eventID = event.getArgument(0, UUID.class);
-        var customerID = event.getArgument(1, String.class);
+        UUID eventID = event.getArgument(0, UUID.class);
+        String cid = event.getArgument(1, String.class);
         boolean isRegistered = false;
         for (DtuPayUser customer : customers) {
-            if (customer.getDtuPayID().equals(customerID)){
+            if (customer.getDtuPayID().equals(cid)){
                 isRegistered = true;
                 break;
             }
         }
-        Event response = new Event("CustomerRegisteredForTokens", new Object[]{eventID, isRegistered});
-        queue.publish(response);
+        mq.publish(new Event("CustomerRegisteredForTokens", new Object[]{eventID, isRegistered}));
     }
+
     //@author s213578 - Johannes Pedersen
     protected String registerCustomer(DtuPayUser customer) throws Exception {
         return createDTUPayUser(customers,customer);
@@ -92,6 +92,7 @@ public class AccountManager {
             throw new Exception("must have a bank account to register");
         }
     }
+
     //@author s174293 - Kasper Jørgensen
     private String genID(){
         String id;
@@ -100,8 +101,9 @@ public class AccountManager {
         } while (!idChecker(id));
         return id;
     }
+
     //@author s202772 - Gustav Kinch
-    private Boolean idChecker(String id){
+    private boolean idChecker(String id) {
         for (DtuPayUser customer : customers) {
             if (customer.getDtuPayID().equals(id)){
                 return false;
@@ -137,13 +139,11 @@ public class AccountManager {
         }
     }
 
-    public void deleteCustomer(String customerID) throws Exception {
-        DtuPayUser userToDelete = getUserById(customers, customerID);
-        customers.remove(userToDelete);
+    public void deleteCustomer(String cid) throws Exception {
+        customers.remove(getUserById(customers, cid));
     }
 
-    public void deleteMerchant(String merchantID) throws Exception {
-        DtuPayUser userToDelete = getUserById(merchants, merchantID);
-        merchants.remove(userToDelete);
+    public void deleteMerchant(String mid) throws Exception {
+        merchants.remove(getUserById(merchants, mid));
     }
 }
