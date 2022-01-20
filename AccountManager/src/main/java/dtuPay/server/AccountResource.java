@@ -35,9 +35,9 @@ public class AccountResource {
     //@author s202772 - Gustav Kinch
     @DELETE
     @Path("/customers/{id}")
-    public Response deleteCustomer(@PathParam("id") String customerID){
+    public Response deleteCustomer(@PathParam("id") String cid){
         try {
-            account.deleteCustomer(customerID);
+            account.deleteCustomer(cid);
             return Response.ok().build();
         } catch (Exception e) {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
@@ -61,9 +61,9 @@ public class AccountResource {
     //@author s212643 - Xingguang Geng
     @DELETE
     @Path("/merchants/{id}")
-    public Response deleteMerchant(@PathParam("id") String merchantID){
+    public Response deleteMerchant(@PathParam("id") String mid){
         try {
-            account.deleteMerchant(merchantID);
+            account.deleteMerchant(mid);
             return Response.ok().build();
         } catch (Exception e) {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();

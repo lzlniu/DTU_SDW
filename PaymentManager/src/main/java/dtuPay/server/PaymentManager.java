@@ -41,8 +41,7 @@ public class PaymentManager {
     private void handleCustomerInformationFromToken(Event e) {
         UUID eventID = e.getArgument(0, UUID.class);
         boolean isCustomerFound = e.getArgument(1, boolean.class);
-
-        if(isCustomerFound){
+        if(isCustomerFound) {
             this.customer.put(eventID, e.getArgument(2, DtuPayUser.class));
         }
         customerFound.get(eventID).complete(isCustomerFound);
@@ -62,28 +61,31 @@ public class PaymentManager {
 
     //@author s215949 - Zelin Li
     protected void createPayment(Payment p) throws Exception {
-        UUID eventID = UUID.randomUUID();
-        getAndValidatePaymentInfo(eventID, p);
-        bank.transferMoneyFromTo(
-                customer.get(eventID).getBankID(),
-                merchant.get(eventID).getBankID(),
-                p.getAmount(), merchant.get(eventID).getFirstName()
-                        + " "  + merchant.get(eventID).getLastName()
-                        + " Received payment of" + p.getAmount() + "kr."
-        );
-        mq.publish(new Event("SuccessfulPayment", new Object[]{p, customer.get(eventID).getDtuPayID()}));
+        mq.publish(new Event("SuccessfulPayment", new Object[]{
+                p, customer
+                .get(bankTransfer(customer, merchant, p))
+                .getDtuPayID()
+        }));
     }
 
     protected void createRefund(Payment p) throws Exception {
+        mq.publish(new Event("SuccessfulRefund", new Object[]{
+                p, customer
+                .get(bankTransfer(merchant, customer, p))
+                .getDtuPayID()
+        }));
+    }
+
+    protected UUID bankTransfer(Map<UUID, DtuPayUser> whoTransfer, Map<UUID, DtuPayUser> whoReceived, Payment p) throws Exception {
         UUID eventID = UUID.randomUUID();
         getAndValidatePaymentInfo(eventID, p);
         bank.transferMoneyFromTo(
-                merchant.get(eventID).getBankID(),
-                customer.get(eventID).getBankID(),
-                p.getAmount(), customer.get(eventID).getFirstName()
-                        + " " + customer.get(eventID).getLastName()
-                        + " Received a refund for " + p.getAmount() + " kr."
+                whoTransfer.get(eventID).getBankID(),
+                whoReceived.get(eventID).getBankID(),
+                p.getAmount(), whoReceived.get(eventID).getFirstName()
+                        + " " + whoReceived.get(eventID).getLastName()
+                        + " Received a money for " + p.getAmount() + " kr."
         );
-        mq.publish(new Event("SuccessfulPayment", new Object[]{p, customer.get(eventID).getDtuPayID()}));
+        return eventID;
     }
 }

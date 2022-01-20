@@ -132,7 +132,7 @@ public class AccountManager {
                 return dtuPayUser;
             }
         }
-        if(list == customers){
+        if (list == customers) {
             throw new Exception("customer id is unknown");
         } else {
             throw new Exception("merchant id is unknown");

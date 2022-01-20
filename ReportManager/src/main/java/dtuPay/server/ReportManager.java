@@ -14,6 +14,7 @@ public class ReportManager {
         this.mq = queue;
         payments = new HashMap<>();
         mq.addHandler("SuccessfulPayment",this::logPayment);
+        mq.addHandler("SuccessfulRefund",this::logRefund);
     }
     //@author s174293 - Kasper Jørgensen
     protected Set<Payment> getCustomerPayments(String cid) {
@@ -40,6 +41,13 @@ public class ReportManager {
     protected void logPayment(Event e) {
         Payment p = e.getArgument(0,Payment.class);
         String cid = e.getArgument(1,String.class);
+        payments.put(p, cid);
+    }
+
+    protected void logRefund(Event e) {
+        Payment p = e.getArgument(0,Payment.class);
+        String cid = e.getArgument(1,String.class);
+        p.setAmount(p.getAmount().negate()); // set to negative as refund
         payments.put(p, cid);
     }
 }
