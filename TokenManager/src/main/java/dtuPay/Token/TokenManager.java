@@ -33,7 +33,7 @@ public class TokenManager {
         activeTokens.get(customerID).remove(payment.getCustomerToken());
     }
     //@author s202772 - Gustav Kinch
-    public List<String> generateTokenList(int n) throws Exception {
+    protected List<String> generateTokenList(int n) throws Exception {
         List<String> returnList = new ArrayList<>();
         if (n < 1 || n > 5) {
             throw new Exception("Must create between 1 and 5 tokens");
@@ -51,7 +51,7 @@ public class TokenManager {
         isRegistered.get(eventID).complete(registered);
     }
     //@author s213578 - Johannes Pedersen
-    public List<String> generateTokens(String customerID, int n) throws Exception {
+    protected List<String> generateTokens(String customerID, int n) throws Exception {
         UUID eventID = UUID.randomUUID();
         isRegistered.put(eventID, new CompletableFuture<>());
         Event event = new Event("GetTokensRequested", new Object[]{eventID, customerID});
@@ -71,11 +71,11 @@ public class TokenManager {
         return activeTokens.get(customerID);
     }
 
-    public List<String> getUserTokens(String customerID){
+    protected List<String> getUserTokens(String customerID){
         return activeTokens.get(customerID);
     } // Zelin Li
     //@author s212643 - Xingguang Geng
-    public void getCustomerFromToken(Event e) {
+    private void getCustomerFromToken(Event e) {
         UUID eventID = e.getArgument(0, UUID.class);
         var customerToken = e.getArgument(1, String.class);
 

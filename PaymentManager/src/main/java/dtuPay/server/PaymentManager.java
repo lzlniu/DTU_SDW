@@ -64,7 +64,7 @@ public class PaymentManager {
     }
 
     //@author s215949 - Zelin Li
-    public boolean createPayment(Payment p) throws Exception {
+    protected void createPayment(Payment p) throws Exception {
         UUID eventID = UUID.randomUUID();
         getAndValidatepaymentInfo(eventID, p);
 
@@ -75,6 +75,18 @@ public class PaymentManager {
                         p.getAmount() + "kr.");
 
         mq.publish(new Event("SuccessfulPayment", new Object[]{p, customer.get(eventID).getDtuPayID()}));
-        return true;
+    }
+
+    protected void createRefund(Payment p) throws Exception {
+        UUID eventID = UUID.randomUUID();
+        getAndValidatepaymentInfo(eventID, p);
+
+        bank.transferMoneyFromTo(
+                merchant.get(eventID).getBankID(),
+                customer.get(eventID).getBankID(),
+                p.getAmount(), customer.get(eventID).getFirstName() + " " + customer.get(eventID).getLastName() + " Received a refund for " +
+                        p.getAmount() + " kr.");
+
+        mq.publish(new Event("SuccessfulPayment", new Object[]{p, customer.get(eventID).getDtuPayID()}));
     }
 }

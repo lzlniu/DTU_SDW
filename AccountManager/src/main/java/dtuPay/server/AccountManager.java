@@ -28,7 +28,7 @@ public class AccountManager {
         setupHandlers();
     }
     //@author  s174293 - Kasper Jørgensen
-    public void setupHandlers() {
+    private void setupHandlers() {
         queue.addHandler("GetTokensRequested", this::handleTokensRequested);
         queue.addHandler("GetMerchantFromID", this::handleGetMerchantFromID);
         queue.addHandler("CustomerFromToken", this::handleCustomerFromToken);
@@ -74,15 +74,15 @@ public class AccountManager {
         queue.publish(response);
     }
     //@author s213578 - Johannes Pedersen
-    public String registerCustomer(DtuPayUser customer) throws Exception {
+    protected String registerCustomer(DtuPayUser customer) throws Exception {
         return createDTUPayUser(customers,customer);
     }
     //@author s212643 - Xingguang Geng
-    public String registerMerchant(DtuPayUser merchant) throws Exception {
+    protected String registerMerchant(DtuPayUser merchant) throws Exception {
         return createDTUPayUser(merchants,merchant);
     }
     //@author s164422 - Thomas Bergen
-    public String createDTUPayUser(List<DtuPayUser> list, DtuPayUser user) throws Exception {
+    private String createDTUPayUser(List<DtuPayUser> list, DtuPayUser user) throws Exception {
         try {
             bank.getAccount(user.getBankID());
             user.setDtuPayID(genID());
@@ -93,7 +93,7 @@ public class AccountManager {
         }
     }
     //@author s174293 - Kasper Jørgensen
-    public String genID(){
+    private String genID(){
         String id;
         do {
             id = UUID.randomUUID().toString();
@@ -101,7 +101,7 @@ public class AccountManager {
         return id;
     }
     //@author s202772 - Gustav Kinch
-    public Boolean idChecker(String id){
+    private Boolean idChecker(String id){
         for (DtuPayUser customer : customers) {
             if (customer.getDtuPayID().equals(id)){
                 return false;
@@ -115,16 +115,16 @@ public class AccountManager {
         return true;
     }
 
-    public List<DtuPayUser> getCustomers() {
+    protected List<DtuPayUser> getCustomers() {
         return customers;
     }
 
-    public List<DtuPayUser> getMerchants() {
+    protected List<DtuPayUser> getMerchants() {
         return merchants;
     }
 
     //@author s215949 - Zelin Li
-    public DtuPayUser getUserById(List<DtuPayUser> list, String id) throws Exception {
+    private DtuPayUser getUserById(List<DtuPayUser> list, String id) throws Exception {
         for (DtuPayUser dtuPayUser : list) {
             if (dtuPayUser.getDtuPayID().equals(id)){
                 return dtuPayUser;

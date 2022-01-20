@@ -19,7 +19,6 @@ public class TokenResource {
             List<String> newTokens = manager.generateTokens(customerID, n);
             return Response.ok().entity(newTokens).build();
         } catch (Exception e) {
-            System.out.println("anything");
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }

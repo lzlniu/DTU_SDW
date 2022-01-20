@@ -22,4 +22,16 @@ public class PaymentResource {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         }
     }
+
+    @Path("/refunds")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createRefund(Payment p) {
+        try {
+            pay.createRefund(p);
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
 }
